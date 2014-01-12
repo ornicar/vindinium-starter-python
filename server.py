@@ -1,24 +1,33 @@
+#!/usr/bin/env python
+
+import os
+import sys
 import requests
 import re
+from bot import *
 
 SERVER_HOST = 'http://localhost:9000'
 
-TAVERN = 0
-AIR = -1
-WALL = -2
+bot = RandomBot()
 
-resp = requests.get(SERVER_HOST + '/api/training/alone')
-json = resp.json()
+def move(url, direction):
+    r = requests.post(url, {'dir': direction})
+    return r.json()
 
-strTiles = json['game']['board']['tiles']
-size = json['game']['board']['size']
-tiles = [string[i:i+2] for i in range(0, len(string), 2)]
+def start(server_url):
+    def play(state):
+        if (state['game']['finished']):
+            print('game finished')
+        else:
+            play(move(state['playUrl'], RandomBot.move(state)))
 
-# board is a two dimension vector
-board = [tiles[i:i+size] for i in range(0, len(tiles), size)]
+    state = requests.post(SERVER_HOST + '/api/training/alone').json()
+    print("Start: " + state['viewUrl'])
+    play(state)
 
-
-class Board:
-    def __init__(self, tiles):
-        self.tiles = tiles
-
+if __name__ == "__main__":
+    if (len(sys.argv) > 1):
+        SERVER_HOST = sys.argv[1]
+        start(sys.argv[1])
+    else:
+        print('Specify the server, ex: "http://localhost:9000"')
