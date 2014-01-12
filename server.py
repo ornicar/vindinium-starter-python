@@ -8,6 +8,8 @@ from bot import *
 
 SERVER_HOST = 'http://localhost:9000'
 
+trainingState = requests.post(SERVER_HOST + '/api/training/alone').json()
+
 bot = RandomBot()
 
 def move(url, direction):
@@ -21,8 +23,7 @@ def start(server_url):
         else:
             play(move(state['playUrl'], RandomBot.move(state)))
 
-    state = requests.post(SERVER_HOST + '/api/training/alone').json()
-    print("Start: " + state['viewUrl'])
+    print("Start: " + trainingState['viewUrl'])
     play(state)
 
 if __name__ == "__main__":
