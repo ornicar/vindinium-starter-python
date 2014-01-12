@@ -1,5 +1,18 @@
 import re
 
+class Pos:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def to(dir):
+        return {
+            'North': Pos(self.x - 1, self.y),
+            'South': Pos(self.x + 1, self.y),
+            'East': Pos(self.x, self.y + 1),
+            'West': Pos(self.x, self.y - 1)
+        }[dir]
+
 class Game:
     def __init__(self, state):
         self.state = state
