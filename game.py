@@ -9,6 +9,14 @@ AIM = {'North': (-1, 0),
        'South': (1, 0),
        'West': (0, -1)}
 
+class HeroTile:
+    def __init__(self, id):
+        self.id = id
+
+class MineTile:
+    def __init__(self, heroId = None):
+        self.heroId = heroId
+
 class Game:
     def __init__(self, state):
         self.state = state
@@ -32,18 +40,18 @@ class Board:
 
     def __parseTiles(self, tiles):
         vector = [tiles[i:i+2] for i in range(0, len(tiles), 2)]
-        vector2n = [vector[i:i+self.size] for i in range(0, len(vector), self.size)]
-        return [self.__parseTile(c) for line in vector2n for c in line]
+        matrix = [vector[i:i+self.size] for i in range(0, len(vector), self.size)]
+        return [[self.__parseTile(x) for x in xs] for xs in matrix]
 
     def __init__(self, board):
         self.size = board['size']
         self.tiles = self.__parseTiles(board['tiles'])
 
     def passable(self, loc):
-        'true if not can walk through'
+        'true if can not walk through'
         x, y = loc
         pos = self.tiles[x][y]
-        return (pos != AIR) and not isinstance(pos, Mine)
+        return (pos != WALL) and (pos != TAVERN) and not isinstance(pos, MineTile)
 
 
 
@@ -54,16 +62,6 @@ class Hero:
         self.life = hero['life']
         self.gold = hero['gold']
 
-
-
-# tiles
-class HeroTile:
-    def __init__(self, id):
-        self.id = id
-
-class MineTile:
-    def __init__(self, heroId = None):
-        self.heroId = heroId
 
 def manhattan_distance(self, loc1, loc2):
     'calculate the closest manhattan distance between two locations'
