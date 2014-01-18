@@ -4,11 +4,12 @@ import os
 import sys
 import requests
 import re
-from bot import *
+from bot import RandomBot
 
 SERVER_HOST = 'http://localhost:9000'
 
 trainingState = requests.post(SERVER_HOST + '/api/training/alone').json()
+state = trainingState
 
 bot = RandomBot()
 
@@ -21,9 +22,12 @@ def start(server_url):
         if (state['game']['finished']):
             print('game finished')
         else:
-            play(move(state['playUrl'], RandomBot.move(state)))
+            url = state['playUrl']
+            direction = bot.move(state)
+            newState = move(state['playUrl'], direction)
+            play(newState)
 
-    print("Start: " + trainingState['viewUrl'])
+    print("Start: " + state['viewUrl'])
     play(state)
 
 if __name__ == "__main__":
