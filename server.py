@@ -4,31 +4,43 @@ import os
 import sys
 import requests
 import re
-from bot import *
+from bot import RandomBot
 
-SERVER_HOST = 'http://localhost:9000'
-
-trainingState = requests.post(SERVER_HOST + '/api/training/alone').json()
-
-bot = RandomBot()
+def get_new_game_state(serverHost, mode='training'):
+    if(mode=='training'):
+        return requests.post(serverHost + '/api/training/alone').json()
+    else:
+        pass
 
 def move(url, direction):
     r = requests.post(url, {'dir': direction})
     return r.json()
 
-def start(server_url):
-    def play(state):
-        if (state['game']['finished']):
-            print('game finished')
-        else:
-            play(move(state['playUrl'], RandomBot.move(state)))
+def start(serverHost, bot, numberOfGames = 20):
 
-    print("Start: " + trainingState['viewUrl'])
+    def play(state, gamesPlayed = 0):
+        if (state['game']['finished']):
+            gamesPlayed += 1
+            print('Game finished: %d/%d' % (gamesPlayed, numberOfGames))
+
+            if(gamesPlayed < numberOfGames):
+                print('asking a new game')
+                state = get_new_game_state(serverHost)
+                play(state, gamesPlayed)
+        else:
+            url = state['playUrl']
+            direction = bot.move(state)
+            newState = move(url, direction)
+
+            print("Playing turn %d with direction %s" % (state['game']['turn'], direction))
+            play(newState, gamesPlayed)
+
+    state = get_new_game_state(serverHost)
+    print("Start: " + state['viewUrl'])
     play(state)
 
 if __name__ == "__main__":
     if (len(sys.argv) > 1):
-        SERVER_HOST = sys.argv[1]
-        start(sys.argv[1])
+        start(sys.argv[1], RandomBot())
     else:
         print('Specify the server, ex: "http://localhost:9000"')

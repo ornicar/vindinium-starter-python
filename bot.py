@@ -5,12 +5,12 @@ class Bot:
 
 class RandomBot(Bot):
 
-    def move(state):
+    def move(self, state):
         dirs = ['Stay', 'North', 'South', 'East', 'West']
         return choice(dirs)
 
 
 class FighterBot(Bot):
-    def move(state):
+    def move(self, state):
         dirs = ['Stay', 'North', 'South', 'East', 'West']
         return choice(dirs)
