@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import os
 import sys
@@ -58,6 +59,9 @@ def start(server_host, key, mode, bot, number_of_games = 20):
 
             print("Playing turn %d with direction %s" % (state['game']['turn'], direction))
             play(new_state, games_played)
+
+    if(mode=='arena'):
+        print u'Connected and waiting for other players to join…'
 
     state = get_new_game_state(server_host, key, mode)
     print("Start: " + state['viewUrl'])
