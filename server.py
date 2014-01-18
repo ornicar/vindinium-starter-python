@@ -6,7 +6,7 @@ import requests
 import re
 from bot import RandomBot
 
-def get_new_game_state(server_host, key, number_of_turns = '20', mode='training'):
+def get_new_game_state(server_host, key, mode='training', number_of_turns = '20'):
     if(mode=='training'):
         params = { 'key': key, 'turns': number_of_turns}
         r = requests.post(server_host + '/api/training', params)
@@ -23,7 +23,7 @@ def move(url, direction):
     r = requests.post(url, {'dir': direction})
     return r.json()
 
-def start(server_host, key, bot, number_of_games = 20):
+def start(server_host, key, mode, bot, number_of_games = 20):
 
     def play(state, games_played = 0):
         if (state['game']['finished']):
@@ -42,13 +42,13 @@ def start(server_host, key, bot, number_of_games = 20):
             print("Playing turn %d with direction %s" % (state['game']['turn'], direction))
             play(new_state, games_played)
 
-    state = get_new_game_state(server_host, key)
+    state = get_new_game_state(server_host, key, mode)
     print("Start: " + state['viewUrl'])
     play(state)
 
 if __name__ == "__main__":
-    if (len(sys.argv) > 3):
-        start(sys.argv[1], sys.argv[2], RandomBot(), int(sys.argv[3]))
+    if (len(sys.argv) > 4):
+        start(sys.argv[1], sys.argv[2], sys.argv[3], RandomBot(), int(sys.argv[4]))
     else:
-        print("Usage: %s <server> <key> <number-of-games-to-play>" % (sys.argv[0]))
-        print('Example: %s http://localhost:9000 mySecretKey 20' % (sys.argv[0]))
+        print("Usage: %s <server> <key> <[training|arena]> <number-of-games-to-play>" % (sys.argv[0]))
+        print('Example: %s http://localhost:9000 mySecretKey training 20' % (sys.argv[0]))
