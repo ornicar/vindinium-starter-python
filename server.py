@@ -25,6 +25,8 @@ def start(server_url):
             url = state['playUrl']
             direction = bot.move(state)
             newState = move(state['playUrl'], direction)
+
+            print("Playing turn %d with direction %s" % (state['game']['turn'], direction))
             play(newState)
 
     print("Start: " + state['viewUrl'])
