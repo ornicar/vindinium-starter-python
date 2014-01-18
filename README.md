@@ -6,4 +6,4 @@ Install deps:
 
 Run with:
 
-    python server.py <SERVER_URL>
+    python server.py <server-url> <number-of-games-to-play>

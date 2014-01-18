@@ -40,7 +40,8 @@ def start(serverHost, bot, numberOfGames = 20):
     play(state)
 
 if __name__ == "__main__":
-    if (len(sys.argv) > 1):
-        start(sys.argv[1], RandomBot())
+    if (len(sys.argv) > 2):
+        start(sys.argv[1], RandomBot(), int(sys.argv[2]))
     else:
-        print('Specify the server, ex: "http://localhost:9000"')
+        print("Usage: %s <server> <number-of-games>" % (sys.argv[0]))
+        print('Example: %s http://localhost:9000 20' % (sys.argv[0]))
