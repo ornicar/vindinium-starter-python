@@ -50,7 +50,7 @@ def start(server_host, key, mode, bot, number_of_games = 20):
 
             if(games_played < number_of_games):
                 print('asking a new game')
-                state = get_new_game_state(server_host, key)
+                state = get_new_game_state(server_host, key, mode)
                 play(state, games_played)
         else:
             url = state['playUrl']
