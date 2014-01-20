@@ -63,10 +63,10 @@ def start(server_url, key, mode, bot):
             direction = bot.move(state)
             new_state = move(url, direction)
 
-            #print("Playing turn %d with direction %s" % (state['game']['turn'], direction))
-            sys.stdout.write('.')
-            sys.stdout.flush()
-            play(new_state, games_played)
+            if(not new_state['game']['finished']):
+                sys.stdout.write('.')
+                sys.stdout.flush()
+                play(new_state, games_played)
 
     if(mode=='arena'):
         print(u'Connected and waiting for other players to join…')
