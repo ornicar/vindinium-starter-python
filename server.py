@@ -45,8 +45,8 @@ def move(url, direction):
         else:
             print("Error HTTP %d\n%s\n" % (r.status_code, r.text))
             return {'game': {'finished': True}}
-    except requests.exceptions.RequestException, e:
-        print e
+    except requests.exceptions.RequestException as e:
+        print(e)
         return {'game': {'finished': True}}
 
 
