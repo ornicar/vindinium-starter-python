@@ -5,9 +5,9 @@ import os
 import sys
 import requests
 import re
-from bot import RandomBot
+from bot import RandomBot, SlowBot
 
-def get_new_game_state(server_host, key, mode='training', number_of_turns = '20'):
+def get_new_game_state(server_host, key, mode='training', number_of_turns = '10'):
     """Get a JSON from the server containing the current state of the game"""
 
     if(mode=='training'):
@@ -36,7 +36,11 @@ def move(url, direction):
     """
 
     r = requests.post(url, {'dir': direction})
-    return r.json()
+    if(r.status_code == 200):
+        return r.json()
+    else:
+        print("Error HTTP %d\n%s\n" % (r.status_code, r.text))
+        return {'game': {'finished': True}}
 
 def start(server_host, key, mode, bot):
     """Starts a game with all the required parameters"""
