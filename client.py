@@ -14,24 +14,19 @@ def get_new_game_state(server_url, key, mode='training', number_of_turns = '10')
 
     if(mode=='training'):
         params = { 'key': key, 'turns': number_of_turns}
-        r = requests.post(server_url + '/api/training', params, timeout=TIMEOUT)
-
-        if(r.status_code == 200):
-            return r.json()
-        else:
-            print("Error when creating the game")
-            print(r.text)
+        api_endpoint = '/api/training'
     elif(mode=='arena'):
         params = { 'key': key}
+        api_endpoint = '/api/arena'
 
-        #Wait for 10 minutes
-        r = requests.post(server_url + '/api/arena', params, timeout=10*60)
+    #Wait for 10 minutes
+    r = requests.post(server_url + api_endpoint, params, timeout=10*60)
 
-        if(r.status_code == 200):
-            return r.json()
-        else:
-            print("Error when creating the game")
-            print(r.text)
+    if(r.status_code == 200):
+        return r.json()
+    else:
+        print("Error when creating the game")
+        print(r.text)
 
 def move(url, direction):
     """Send a move to the server
