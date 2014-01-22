@@ -52,28 +52,29 @@ def move(url, direction):
         return {'game': {'finished': True}}
 
 
+def is_finished(state):
+    return state['game']['finished']
+
 def start(server_url, key, mode, bot):
     """Starts a game with all the required parameters"""
 
-    def play(state, games_played = 0):
-        """Main game loop"""
-
-        if (not state['game']['finished']):
-            url = state['playUrl']
-            direction = bot.move(state)
-            new_state = move(url, direction)
-
-            if(not new_state['game']['finished']):
-                sys.stdout.write('.')
-                sys.stdout.flush()
-                play(new_state, games_played)
 
     if(mode=='arena'):
         print(u'Connected and waiting for other players to join…')
-
+    # Get the initial state
     state = get_new_game_state(server_url, key, mode)
-    print("Start: " + state['viewUrl'])
-    play(state)
+    print("Playing at: " + state['viewUrl'])
+
+    while not is_finished(state):
+        # Some nice output ;)
+        sys.stdout.write('.')
+        sys.stdout.flush()
+
+        # Move to some direction
+        url = state['playUrl']
+        direction = bot.move(state)
+        state = move(url, direction)
+
 
 if __name__ == "__main__":
     if (len(sys.argv) < 4):
