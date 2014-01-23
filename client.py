@@ -13,7 +13,8 @@ def get_new_game_state(server_url, key, mode='training', number_of_turns = '10')
     """Get a JSON from the server containing the current state of the game"""
 
     if(mode=='training'):
-        params = { 'key': key, 'turns': number_of_turns}
+        #Don't pass the 'map' parameter if you want a random map
+        params = { 'key': key, 'turns': number_of_turns, 'map': 'm1'}
         api_endpoint = '/api/training'
     elif(mode=='arena'):
         params = { 'key': key}
