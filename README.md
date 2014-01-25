@@ -6,9 +6,9 @@ Install deps:
 
 Run with:
 
-    python server.py <key> <[training|arena]> <number-of-games-to-play> [server-url]
+    python client.py <key> <[training|arena]> <number-of-games-to-play> [server-url]
 
 Examples:
 
-    python server.py mySecretKey arena 10
-    python server.py mySecretKey training 10 http://localhost:9000
+    python client.py mySecretKey arena 10
+    python client.py mySecretKey training 10 http://localhost:9000
