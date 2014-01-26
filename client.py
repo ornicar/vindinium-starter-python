@@ -90,7 +90,7 @@ if __name__ == "__main__":
         if(len(sys.argv) == 5):
             server_url = sys.argv[4]
         else:
-            server_url = "http://vindinium.jousse.org"
+            server_url = "http://vindinium.org"
 
         for i in range(number_of_games):
             start(server_url, key, mode, number_of_turns, RandomBot())
