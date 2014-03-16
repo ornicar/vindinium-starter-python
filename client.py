@@ -9,7 +9,7 @@ from bot import RandomBot, SlowBot
 
 TIMEOUT=15
 
-def get_new_game_state(server_url, key, mode='training', number_of_turns = 10):
+def get_new_game_state(session, server_url, key, mode='training', number_of_turns = 10):
     """Get a JSON from the server containing the current state of the game"""
 
     if(mode=='training'):
@@ -21,7 +21,7 @@ def get_new_game_state(server_url, key, mode='training', number_of_turns = 10):
         api_endpoint = '/api/arena'
 
     #Wait for 10 minutes
-    r = requests.post(server_url + api_endpoint, params, timeout=10*60)
+    r = session.post(server_url + api_endpoint, params, timeout=10*60)
 
     if(r.status_code == 200):
         return r.json()
@@ -29,14 +29,14 @@ def get_new_game_state(server_url, key, mode='training', number_of_turns = 10):
         print("Error when creating the game")
         print(r.text)
 
-def move(url, direction):
+def move(session, url, direction):
     """Send a move to the server
     
     Moves can be one of: 'Stay', 'North', 'South', 'East', 'West' 
     """
 
     try:
-        r = requests.post(url, {'dir': direction}, timeout=TIMEOUT)
+        r = session.post(url, {'dir': direction}, timeout=TIMEOUT)
 
         if(r.status_code == 200):
             return r.json()
@@ -54,11 +54,13 @@ def is_finished(state):
 def start(server_url, key, mode, turns, bot):
     """Starts a game with all the required parameters"""
 
+    # Create a requests session that will be used throughout the game
+    session = requests.session()
 
     if(mode=='arena'):
         print(u'Connected and waiting for other players to join…')
     # Get the initial state
-    state = get_new_game_state(server_url, key, mode, turns)
+    state = get_new_game_state(session, server_url, key, mode, turns)
     print("Playing at: " + state['viewUrl'])
 
     while not is_finished(state):
@@ -66,10 +68,15 @@ def start(server_url, key, mode, turns, bot):
         sys.stdout.write('.')
         sys.stdout.flush()
 
-        # Move to some direction
-        url = state['playUrl']
+        # Choose a move
         direction = bot.move(state)
-        state = move(url, direction)
+
+        # Send the move and receive the updated game state
+        url = state['playUrl']
+        state = move(session, url, direction)
+
+    # Clean up the session
+    session.close()
 
 
 if __name__ == "__main__":
